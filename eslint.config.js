@@ -32,7 +32,7 @@ const overrides = {
 };
 
 export default tseslint.config(
-  { ignores: ['dist', 'postcss.config.cjs'] },
+  { ignores: ['dist', 'postcss.config.cjs', 'coverage'] },
   {
     languageOptions: {
       ecmaVersion: 2020,

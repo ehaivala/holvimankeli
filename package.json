@@ -6,7 +6,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "serve": "vite preview",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint . --report-unused-disable-directives",
+    "check-format": "prettier --check .",
     "format": "prettier --write .",
     "test": "vitest"
   },
@@ -23,6 +25,7 @@
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react-swc": "^4.0.1",
+    "@vitest/coverage-v8": "^4.0.9",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
