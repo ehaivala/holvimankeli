@@ -1,14 +1,14 @@
 import { useRef, useState } from 'react';
 
 import { FileInput } from './components/FileInput/FileInput';
-import { ExcelRowData, readExcelFile } from './lib/excel';
+import { OutputRowData, readExcelFile } from './lib/excel';
 
 function App() {
   const fileRef = useRef<File | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const [hasError, setHasError] = useState(false);
-  const [rows, setRows] = useState<ExcelRowData[]>([]);
+  const [rows, setRows] = useState<OutputRowData[]>([]);
 
   const handleFileSelect = (file: File) => {
     fileRef.current = file;
@@ -53,29 +53,35 @@ function App() {
             <table>
               <thead>
                 <tr>
-                  <th>Value date</th>
-                  <th>Entry date</th>
-                  <th>Payment class</th>
-                  <th>Payment subclass</th>
-                  <th>Category</th>
-                  <th>Payer</th>
-                  <th>Description</th>
-                  <th>Additional info</th>
-                  <th>Total</th>
+                  <td>Pvm</td>
+                  <td>Selite</td>
+                  <td>Maksaja/Saaja</td>
+                  <td>Tosite nro.</td>
+                  <td>Tili</td>
+                  <td>Jäsenmaksut</td>
+                  <td>Osallistumismaksut</td>
+                  <td>Vuokrakulut</td>
+                  <td>Muut</td>
+                  <td>Pankkikulut</td>
+                  <td>Korkotuotot</td>
+                  <td>Vero</td>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row, index) => (
                   <tr key={`row-${index}`}>
-                    <td>{row.valueDate.toISOString()}</td>
-                    <td>{row.entryDate.toISOString()}</td>
-                    <td>{row.paymentClass}</td>
-                    <td>{row.paymentSubclass}</td>
-                    <td>{row.category}</td>
-                    <td>{row.payer}</td>
+                    <td>{row.date.toLocaleDateString()}</td>
                     <td>{row.description}</td>
-                    <td>{row.additionalInfo}</td>
-                    <td>{row.totalSum}</td>
+                    <td>{row.payeeOrPayer}</td>
+                    <td>{row.receiptNumber}</td>
+                    <td>{row.total}</td>
+                    <td>{row.membershipFee}</td>
+                    <td>{row.participationFee}</td>
+                    <td>{row.rentExpense}</td>
+                    <td>{row.otherExpense}</td>
+                    <td>{row.bankingFee}</td>
+                    <td>{row.interestRevenue}</td>
+                    <td>{row.tax}</td>
                   </tr>
                 ))}
               </tbody>

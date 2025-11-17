@@ -67,7 +67,7 @@ describe('readExcelFile', () => {
     vi.clearAllMocks();
   });
 
-  it('reads and maps valid rows into ExcelRowData objects', async () => {
+  it('reads and maps valid rows into OutputRowData objects', async () => {
     const file = { name: 'mock.xlsx' } as File;
     const rows = createRowsWithHeaders([
       createRawRow({
@@ -86,15 +86,12 @@ describe('readExcelFile', () => {
     );
     expect(result).toHaveLength(1);
     expect(result[0]).toMatchObject({
-      valueDate: new Date(2024, 0, 1),
-      entryDate: new Date(2024, 0, 2),
-      paymentClass: PaymentClass.Expense,
-      paymentSubclass: PaymentSubclass.OutboundPayment,
-      category: Category.ServiceFee,
-      payer: 'acme oy',
-      description: 'Description',
-      additionalInfo: 'Info',
-      totalSum: 456.78,
+      date: new Date(2024, 0, 1),
+      receiptNumber: 1,
+      total: 456.78,
+      payeeOrPayer: 'Acme Oy',
+      bankingFee: 456.78,
+      description: 'Holvi, palvelumaksu',
     });
   });
 

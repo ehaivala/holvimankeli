@@ -10,13 +10,7 @@ import {
 } from 'vitest';
 
 import App from './App';
-import {
-  Category,
-  type ExcelRowData,
-  PaymentClass,
-  PaymentSubclass,
-  readExcelFile,
-} from './lib/excel';
+import { type OutputRowData, readExcelFile } from './lib/excel';
 
 vi.mock('./lib/excel', async () => {
   const actual =
@@ -48,17 +42,14 @@ function createDeferred<T>(): Deferred<T> {
   return { promise, resolve, reject };
 }
 
-function createRow(overrides?: Partial<ExcelRowData>): ExcelRowData {
+function createRow(overrides?: Partial<OutputRowData>): OutputRowData {
   return {
-    valueDate: new Date('2024-01-01T00:00:00.000Z'),
-    entryDate: new Date('2024-01-02T00:00:00.000Z'),
-    paymentClass: PaymentClass.Expense,
-    paymentSubclass: PaymentSubclass.OutboundPayment,
-    category: Category.ServiceFee,
-    payer: 'payer',
-    description: 'description',
-    additionalInfo: 'info',
-    totalSum: 42,
+    date: new Date('2024-01-01T00:00:00.000Z'),
+    description: 'Holvi, palvelumaksu',
+    payeeOrPayer: 'Payer',
+    receiptNumber: 1,
+    total: 42,
+    bankingFee: 42,
     ...overrides,
   };
 }
@@ -70,8 +61,8 @@ describe('App', () => {
 
   it('renders parsed rows after a successful file import', async () => {
     const user = userEvent.setup();
-    const rows: ExcelRowData[] = [
-      createRow({ description: 'first row', totalSum: 7 }),
+    const rows: OutputRowData[] = [
+      createRow({ description: 'first row', total: 7 }),
     ];
 
     mockReadExcelFile.mockResolvedValueOnce(rows);
@@ -87,7 +78,7 @@ describe('App', () => {
 
     await waitFor(() => {
       expect(screen.getByText(rows[0]!.description)).toBeInTheDocument();
-      expect(screen.getByText(String(rows[0]!.totalSum))).toBeInTheDocument();
+      expect(screen.getByText(String(rows[0]!.total))).toBeInTheDocument();
     });
 
     expect(mockReadExcelFile).toHaveBeenCalledTimes(1);
@@ -120,14 +111,14 @@ describe('App', () => {
   it('ignores stale parsing results when a newer file is selected', async () => {
     const user = userEvent.setup();
 
-    const firstRows: ExcelRowData[] = [
-      createRow({ description: 'first description', totalSum: 11 }),
+    const firstRows: OutputRowData[] = [
+      createRow({ description: 'first description', total: 11 }),
     ];
-    const secondRows: ExcelRowData[] = [
-      createRow({ description: 'second description', totalSum: 22 }),
+    const secondRows: OutputRowData[] = [
+      createRow({ description: 'second description', total: 22 }),
     ];
 
-    const firstDeferred = createDeferred<ExcelRowData[]>();
+    const firstDeferred = createDeferred<OutputRowData[]>();
     mockReadExcelFile.mockReturnValueOnce(firstDeferred.promise);
     mockReadExcelFile.mockResolvedValueOnce(secondRows);
 
