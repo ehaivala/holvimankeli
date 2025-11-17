@@ -6,13 +6,13 @@ on:
   pull_request:
     branches: [main]
 
-# permissions:
-#   contents: read
-#   pages: write
-#   id-token: write
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -26,19 +26,19 @@ jobs:
       - run: npm run check-format
       - run: npm run test -- --coverage
       - run: npm run build
-#      - uses: actions/upload-pages-artifact@v4
-#        with:
-#          path: dist
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
 
-#  deploy:
-#      environment:
-#        name: github-pages
-#        url: ${{ steps.deployment.outputs.page_url }}
-#      needs: build
-#      runs-on: ubuntu-latest
-#      name: Deploy
-#      steps:
-#        - name: Deploy to GitHub Pages
-#          id: deployment
-#          uses: actions/deploy-pages@v4
-#          if: ${{ github.event_name == 'push' }}
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        if: ${{ github.event_name == 'push' }}
